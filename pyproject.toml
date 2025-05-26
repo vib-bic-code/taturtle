@@ -1,0 +1,19 @@
+[project]
+name = "example_package_YOUR_USERNAME_HERE"
+version = "0.0.1"
+authors = [
+  { name="Tatiana Woller", email="tatiana.woller@kuleuven.be" },
+]
+description = "Package to do align FIB-SEM images using template matching"
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "GPL-v3.0"
+license-files = ["LICEN[CS]E*"]
+
+[project.urls]
+Homepage = "https://github.com/vib-bic-code/sampleproject"
+Issues = "https://github.com/vib-bic-code/sampleproject/issues"
