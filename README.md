@@ -6,7 +6,7 @@
 
 ## README
 
-### Installatiom
+### Installation
 - windows and linux compatible
 - a faire
 
@@ -16,6 +16,8 @@
 python main.py  --x_a 6 182 --y_a 2073 2278 --search_window  100 --alpha 1.0 --to_crop True --thick_corr True --slice_thickness_nm 5.0 --cpu 16 --img_ref "pathway_dataset/dataset/ref_image.tif"
 ```
 
+### How to run tests
+ ``` python -m unittest tests/tests_utils.py```
 ### Contact
 
 - tatiana.woller@kuleuven.be
