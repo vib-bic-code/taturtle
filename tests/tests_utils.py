@@ -3,6 +3,8 @@ import shutil
 import os
 from pathlib import Path
 import numpy as np
+import sys
+sys.path.append("../src")
 from src.utils import get_file_list, create_filename_output, create_filename_output_thickness
 
 class TestUtilsFunctions(unittest.TestCase):
