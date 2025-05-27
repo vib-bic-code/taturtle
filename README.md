@@ -18,6 +18,8 @@ python main.py  --x_a 6 182 --y_a 2073 2278 --search_window  100 --alpha 1.0 --t
 
 ### How to run tests
  ``` python -m unittest tests/tests_utils.py```
+  ``` python -m unittest tests/tests_thickness_corr.py```
+   ``` python -m unittest tests/tests_autocrop.py```
 ### Contact
 
 - tatiana.woller@kuleuven.be
