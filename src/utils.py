@@ -10,7 +10,7 @@ def get_file_list(folder_path:str)->np.ndarray:
     if os.path.exists(folder_path):
         tiff_files = np.array([os.path.join(folder_path,f) for f in os.listdir(folder_path) if f.endswith(('.tif','.tiff'))])
     else:
-        print('The folder does not exist')
+        return None
     return tiff_files
 
 def create_filename_output(input_path:str,f:str, output_folder:str)->str:
