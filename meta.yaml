@@ -15,14 +15,14 @@ requirements:
     - scikit-image
     - tifffile
     - scipy
-    - multiprocessing
+    - multiprocess
   run:
     - python
     - numpy
     - scikit-image
     - tifffile
     - scipy
-    - multiprocessin
+    - multiprocess
 
 test:
   imports:
