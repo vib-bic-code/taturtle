@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 import multiprocessing as mp
-import os
 from pathlib import Path
 
 import numpy as np
@@ -99,32 +98,25 @@ def _process_image(
 def save_shift_image(
     input_path: Path,
     outdir: Path,
-    tiff_files: list[Path],  # TODO: wat? Below is treating this as a single path
+    tiff_file: Path,
     x_0: int,
     y_0: int,
     posx: int,
     posy: int,
 ) -> tuple[int, int]:
     """shift, save the aligned images and returns the shift in x/y"""
-    shift_x, shift_y = x_0 - posx, y_0 - posy
-    im = ndi.shift(tifffile.imread(os.path.join(input_path, file)), (shift_x, shift_y))
-    iio.imsave(input_path.parent / outdir / f"{file.stem}.tif")
-    #     os.path.join(Path(input_path).parent, outdir, f"{Path(file).stem}.tif"), im
-    # )
+    shift = (x_0 - posx, y_0 - posy)
+    im = ndi.shift(tifffile.imread(input_path / tiff_file), shift)
+    iio.imsave(input_path.parent / outdir / f"{tiff_file.stem}.tif", im)
 
-    return shift_x, shift_y
+    return shift
 
 
 def run_template_matching(
     input_path: str,
     template: TemplateMatching,
-    # tiff_files: np.ndarray,
-    # patch_ref: np.ndarray,
-    # patch_prev: np.ndarray,
     alpha: int,
     search_window: int,
-    # prev_x: int,
-    # prev_y: int,
     cpu: int,
 ) -> list[tuple[int, int, np.ndarray]]:
     """runs the template matching"""

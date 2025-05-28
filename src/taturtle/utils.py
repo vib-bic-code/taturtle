@@ -57,17 +57,6 @@ def arguments_parser():
     )
     parser.add_argument("--cpu", type=int, help="number of cpus to use")
     parser.add_argument(
-        "--img-ref", type=str, help="reference image associated to the ROI"
+        "--img-ref", type=Path, help="reference image associated to the ROI"
     )
-    args = parser.parse_args()
-    return (
-        args.x_a,
-        args.y_a,
-        args.search_window,
-        args.alpha,
-        args.crop,
-        args.thick_corr,
-        args.slice_thickness_nm,
-        args.cpu,
-        args.img_ref,
-    )
+    return parser.parse_args()
