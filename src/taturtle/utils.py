@@ -2,17 +2,12 @@ import argparse
 from pathlib import Path
 
 
-# TODO: None handling can be avoided by returning an empty list?
-def get_file_list(folder_path: Path) -> list[Path] | None:
+def get_file_list(folder_path: Path) -> list[Path]:
     """returns the list of tiff files in the folder"""
     if folder_path.exists():
-        return [
-            folder_path / f
-            for f in folder_path.iterdir()
-            if f.suffix in (".tif", ".tiff")
-        ]
+        return [f for f in folder_path.iterdir() if f.suffix in (".tif", ".tiff")]
 
-    return None
+    return []
 
 
 def create_filename_output(input_path: Path, f: Path, output_folder: Path) -> Path:

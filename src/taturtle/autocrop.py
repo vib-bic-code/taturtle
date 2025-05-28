@@ -6,7 +6,6 @@ import tifffile
 
 from taturtle.utils import get_file_list
 
-# TODO: Can we make Python 3.12 a min?
 type _Region = tuple[int, int, int, int]
 
 

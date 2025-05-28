@@ -1,13 +1,12 @@
 [project]
 name = "taturtle"
 dynamic = ["version"]
-version = "0.0.1"
 description = "Alignment of FIB-SEM images using template matching and thickness correction."
 authors = [
     {name = "Tatiana Woller", email = "tatiana.woller@kuleuven.be"},
 ]
 dependencies = ["numpy>=2.2.6", "scikit-image>=0.25.2", "tifffile>=2025.5.26", "scipy>=1.15.3"]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 readme = "README.md"
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -29,7 +28,7 @@ build-backend = "pdm.backend"
 
 [tool.pdm]
 distribution = true
-version = { source = "file", path = "src/taturtle/__version__py" }
+version = { source = "file", path = "src/taturtle/__version__.py" }
 
 [tool.ruff.format]
 line-ending = "lf"
