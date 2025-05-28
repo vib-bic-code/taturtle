@@ -41,7 +41,7 @@ def _nearest_neighbor_resample(
         )
         zs = np.array([s.z for s in slices], dtype=np.float64)
         isotonic = isotonic_regression.fit(zs)
-        make_strictly_monotonic(isotonic)
+        _make_strictly_monotonic(isotonic)
         slices = [_PathPair(slices[i].path, z) for i, z in enumerate(isotonic)]
 
     return _do_nearest_neighbor_resampling(slices, slice_thickness_nm)
@@ -111,8 +111,7 @@ def _slice_positions_monotonically_increasing(
     return True
 
 
-# TODO: modify the ndarray in-place?
-def make_strictly_monotonic(zs: np.ndarray) -> None:
+def _make_strictly_monotonic(zs: np.ndarray) -> None:
     if len(zs) == 0:
         return
 
@@ -133,7 +132,6 @@ def make_strictly_monotonic(zs: np.ndarray) -> None:
             interval_z = zs[i]
 
 
-# TODO: modify the ndarray in-place?
 def _make_strictly_monotonic_interval(zs: np.ndarray, i1: int, i2: int) -> None:
     assert i2 < len(zs)
     assert i1 < i2

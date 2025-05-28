@@ -11,7 +11,7 @@ from taturtle.utils import get_file_list
 
 
 @dataclass(frozen=True)
-class TemplateMatching:  # TODO: is there a better name for this?
+class TemplateMatching:
     init_x: int
     init_y: int
     prev_x: int
@@ -27,21 +27,14 @@ def init_templatematching(
     image_ref: Path,
     x_a: list[int],
     y_a: list[int],
-    tm_number: int,  # TODO: What is this?!
 ) -> TemplateMatching:
     """initializing parameters for template matching"""
-    if tm_number == 1:
-        tiff_files_list = get_file_list(input_path)
-        im = np.array(tifffile.imread(image_ref))
-    elif tm_number == 2:
-        tiff_files_list = get_file_list(Path(input_path).parent / "thickness_corr")
-        for f in tiff_files_list:
-            if Path(image_ref).stem in Path(f).stem:
-                im = np.array(tifffile.imread(image_ref))
+    tiff_files_list = get_file_list(input_path)
+    im = np.array(tifffile.imread(image_ref))
     patch_ref = im[x_a[0] : x_a[1], y_a[0] : y_a[1]].astype(np.float64)
     init_x, init_y = x_a[0], y_a[0]
     prev_x, prev_y = init_x, init_y
-    patch_prev = patch_ref  # TODO: This is the same as patch_ref (see line 10)
+    patch_prev = patch_ref
     patch_list = np.zeros(
         (patch_ref.shape[0], patch_ref.shape[1], len(tiff_files_list))
     )

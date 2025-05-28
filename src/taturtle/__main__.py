@@ -38,7 +38,7 @@ def main():
         image_ref = input_path.parent / "cropped" / args.img_ref.name
 
     if not args.thick_corr:
-        template = init_templatematching(input_path, image_ref, x_a, y_a, 1)
+        template = init_templatematching(input_path, image_ref, x_a, y_a)
         patch_prev, prev_x, prev_y, patch_list = unpack_result_template_step1(
             run_template_matching(
                 input_path,
@@ -88,7 +88,9 @@ def main():
             len_slices,
             "Thickness correction passed",
         )
-        template = init_templatematching(input_path, image_ref, x_a, y_a, 2)
+        template = init_templatematching(
+            input_path.parent / Path("thickness_corr"), image_ref, x_a, y_a
+        )
         patch_prev, prev_x, prev_y, patch_list = unpack_result_template_step1(
             run_template_matching(
                 input_path,

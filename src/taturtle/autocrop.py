@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 import numpy as np
@@ -79,24 +78,14 @@ def _shift_xy(image: np.ndarray) -> tuple[int, int]:
 
 def run_autocrop(input_path: Path, im_ref: Path, outdir: Path) -> tuple[int, int]:
     """Run the autocropper on all images in the input folder."""
-    # TODO: x_shift and y_shift are not guaranteed to be set?
-    # TODO: x_shift and y_shift are overwritten
-    file_list = get_file_list(input_path)
+    image = tifffile.imread(im_ref)
+    cropped_image, nonblack_region = _get_crop_im_ref(image)
+    x_shift, y_shift = _shift_xy(image)
+    tifffile.imwrite(input_path.parent / outdir / f"{im_ref.stem}.tif")
+    file_list = [path for path in get_file_list(input_path) if path != im_ref]
     for f in file_list:
         image = tifffile.imread(f)
-        if f == im_ref:
-            cropped_image, nonblack_region = _get_crop_im_ref(image)
-            x_shift, y_shift = _shift_xy(image)
-            tifffile.imwrite(
-                os.path.join(Path(input_path).parent, outdir, f"{Path(f).stem}.tif"),
-                cropped_image,
-            )
-        else:
-            cropped_image = _get_crop(
-                image, nonblack_region
-            )  # TODO: wat?! Are we sure that nonblack_region is correct here?
-            tifffile.imwrite(
-                os.path.join(Path(input_path).parent, outdir, f"{Path(f).stem}.tif"),
-                cropped_image,
-            )
+        cropped_image = _get_crop(image, nonblack_region)
+        tifffile.imwrite(input_path.parent / outdir / f"{f.stem}.tif", cropped_image)
+
     return x_shift, y_shift
