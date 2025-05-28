@@ -1,19 +1,39 @@
 [project]
-name = "example_package_YOUR_USERNAME_HERE"
+name = "taturtle"
+dynamic = ["version"]
 version = "0.0.1"
+description = "Alignment of FIB-SEM images using template matching and thickness correction."
 authors = [
-  { name="Tatiana Woller", email="tatiana.woller@kuleuven.be" },
+    {name = "Tatiana Woller", email = "tatiana.woller@kuleuven.be"},
 ]
-description = "Package to do align FIB-SEM images using template matching"
-readme = "README.md"
+dependencies = ["numpy>=2.2.6", "scikit-image>=0.25.2", "tifffile>=2025.5.26", "scipy>=1.15.3"]
 requires-python = ">=3.11"
+readme = "README.md"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-license = "BSD-3-clause"
-license-files = ["LICEN[CS]E*"]
+license = {text = "GPL-3.0-only"}
 
 [project.urls]
-Homepage = "https://github.com/vib-bic-code/sampleproject"
-Issues = "https://github.com/vib-bic-code/sampleproject/issues"
+Homepage = "https://github.com/vib-bic-code/taturtle"
+Issues = "https://github.com/vib-bic-code/taturtle/issues"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
+version = { source = "file", path = "src/taturtle/__version__py" }
+
+[tool.ruff.format]
+line-ending = "lf"
+
+[dependency-groups]
+test = [
+    "pytest>=8.3.5",
+    "ruff>=0.11.11",
+    "mypy>=1.15.0",
+]
