@@ -19,6 +19,9 @@ license = {text = "GPL-3.0-only"}
 Homepage = "https://github.com/vib-bic-code/taturtle"
 Issues = "https://github.com/vib-bic-code/taturtle/issues"
 
+[project.scripts]
+taturtle = "taturtle.__main__:main"
+
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
