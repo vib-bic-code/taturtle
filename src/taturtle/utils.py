@@ -2,7 +2,6 @@ import argparse
 from pathlib import Path
 
 
-
 # TODO: None handling can be avoided by returning an empty list?
 def get_file_list(folder_path: Path) -> list[Path] | None:
     """returns the list of tiff files in the folder"""
@@ -41,7 +40,11 @@ def arguments_parser():
     parser.add_argument("--y_a", nargs=2, type=int, help="y_a values")
     parser.add_argument("--search-window", type=int, help="search window")
     parser.add_argument("--alpha", type=float, default=1.0, help="alpha value")
-    parser.add_argument("--to-crop", type=str, help="set to True to crop images")
+    parser.add_argument(
+        "--crop",
+        action=argparse.BooleanOptionalAction,
+        help="set to True to crop images",
+    )
     parser.add_argument(
         "--thick-corr",
         action=argparse.BooleanOptionalAction,
@@ -60,7 +63,7 @@ def arguments_parser():
         args.y_a,
         args.search_window,
         args.alpha,
-        args.to_crop,
+        args.crop,
         args.thick_corr,
         args.slice_thickness_nm,
         args.cpu,

@@ -35,8 +35,7 @@ def main():
     (input_path.parent / "cropped").mkdir(parents=True, exist_ok=True)
 
     #  first template matching
-    start = time.time()
-    if crop == "False" or crop == "false":
+    if not crop:
         print("autocrop skipped")
     else:
         x_shift, y_shift = autocrop.run_autocrop(input_path, image_ref, Path("cropped"))
