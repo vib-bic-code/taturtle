@@ -19,7 +19,7 @@ class TemplateMatching:  # TODO: is there a better name for this?
     patch_ref: np.ndarray[tuple[int, ...], np.dtype[np.float64]]
     patch_prev: np.ndarray[tuple[int, ...], np.dtype[np.float64]]
     patch_list: np.ndarray[tuple[int, int, int], np.dtype[np.float64]]
-    tiff_files: list[Path] | None
+    tiff_files: list[Path]
 
 
 def init_templatematching(
