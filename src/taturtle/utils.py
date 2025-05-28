@@ -35,7 +35,9 @@ def create_filename_output_thickness(
 
 def arguments_parser():
     """collects arguments to run the template matching and thickness correction"""
-    parser = argparse.ArgumentParser(description="Process some parameters.")
+    parser = argparse.ArgumentParser(
+        description="Alignment of FIB-SEM images using template matching and thickness correction."
+    )
     parser.add_argument("--x_a", nargs=2, type=int, help="x_a values")
     parser.add_argument("--y_a", nargs=2, type=int, help="y_a values")
     parser.add_argument("--search-window", type=int, help="search window")
