@@ -17,7 +17,9 @@ from taturtle.utils import arguments_parser
 def main():
     args = arguments_parser()
     input_path = args.img_ref.parent
-
+    image_ref = args.img_ref
+    x_a = args.x_a
+    y_a = args.y_a
     # Output Paths
     (input_path.parent / "output").mkdir(parents=True, exist_ok=True)
     (input_path.parent / "thickness_corr").mkdir(parents=True, exist_ok=True)
@@ -30,7 +32,7 @@ def main():
         print("autocrop skipped")
     else:
         x_shift, y_shift = autocrop.run_autocrop(
-            input_path, args.image_ref, Path("cropped")
+            input_path, args.img_ref, Path("cropped")
         )
         x_a = [x - x_shift for x in args.x_a]
         y_a = [y - y_shift for y in args.y_a]
@@ -100,7 +102,7 @@ def main():
                 args.cpu,
             ),
             template.patch_ref,
-            template.tiff_files,
+            len(template.tiff_files),
         )
         results2 = run_template_matching(
             input_path,
@@ -120,7 +122,7 @@ def main():
                 pos_y2,
             )
             print(
-                f"Registration displacement ({i + 1}/{len(template.tiff_file)}): {shift_x2} - {shift_y2}"
+                f"Registration displacement ({i + 1}/{len(template.tiff_files)}): {shift_x2} - {shift_y2}"
             )
         print(
             "The time of execution of the template matching with thickness correction is :",
