@@ -3,7 +3,7 @@ name = "taturtle"
 dynamic = ["version"]
 description = "Alignment of FIB-SEM images using template matching and thickness correction."
 authors = [
-    {name = "Tatiana Woller", email = "tatiana.woller@kuleuven.be"},
+    {name = "Tatiana Woller", email = "tatiana.woller@vib.be"},{name = "Benjamin Pavie", email = "benjamin.pavie@vib.be"}
 ]
 dependencies = ["numpy>=2.2.6", "scikit-image>=0.25.2", "tifffile>=2025.5.26", "scipy>=1.15.3"]
 requires-python = ">=3.12"
