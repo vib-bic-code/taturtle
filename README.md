@@ -47,5 +47,5 @@ python  __main__.py  --x_a 6 71 --y_a 1140 1392 --search-window  100 --alpha 1.0
 
 ### Contact
 
-- tatiana.woller@kuleuven.be
+- tatiana.woller@vib.be
 
