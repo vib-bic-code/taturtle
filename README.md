@@ -55,12 +55,12 @@ usage: __main__.py [-h] [--x_a X_A X_A] [--y_a Y_A Y_A] [--search-window SEARCH_
  ```
 - to run a template matching with autocrop and thickness correction (example 1)
 ```bash
-python  __main__.py  --x_a 6 71 --y_a 1140 1392 --search-window  100 --alpha 1.0  --crop --thick-corr --slice-thickness-nm 5.0  --img-ref "pathway\slice_00100_z=0.6358um.tif" --cpu 8
+python  __main__.py   --x_a 6 182 --y_a 2073 2278 --search_window  100 --alpha 1.0  --crop --thick-corr --slice_thickness_nm 5.0 --cpu 8 --img_ref "/GBW-0004_CMEVIB_OMERO/0001_LIMONE/Tatiana/test_clem/debug100/slice_00200_z=1.0549um.tif"
 ```
+
 - example2:
 ```bash
-python  __main__.py   --x_a 6 182 --y_a 2073 2278 --search_window  100 --alpha 1.0  --no-crop --thick-corr --slice_thickness_nm 5.0 --cpu 8 --img_ref "/GBW-0004_CMEVIB_OMERO/0001_LIMONE/Tatiana/test_clem/debug100/slice_00200_z=1.0549um.tif"
-
+python  __main__.py  --x_a 6 71 --y_a 1140 1392 --search-window  100 --alpha 1.0  --crop --thick-corr --slice-thickness-nm 5.0  --img-ref "pathway\slice_00100_z=0.6358um.tif" --cpu 8
 ```
   
 ### Contact
