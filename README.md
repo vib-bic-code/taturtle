@@ -7,6 +7,18 @@
 ## README
 
 ### Installation
+
+#### To use, with conda
+```bash
+git clone https://github.com/vib-bic-code/taturtle.git
+cd taturtle
+conda create -n taturtle-env -c conda-forge python=3.11
+conda activate taturtle-env
+python -m pip install -e .
+```
+
+#### To edit
+
 ```bash
 git clone https://github.com/vib-bic-code/taturtle.git
 cd taturtle
