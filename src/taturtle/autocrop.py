@@ -5,7 +5,7 @@ import tifffile
 
 from taturtle.utils import get_file_list
 
-type _Region = tuple[int, int, int, int]
+_Region = tuple[int, int, int, int]
 
 
 def _get_nonblack_region(image: np.ndarray) -> _Region:
