@@ -1,6 +1,6 @@
-import numpy as np
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 from taturtle import thickness_correction
@@ -43,7 +43,9 @@ def test_parse_filenames_float_and_int():
 
 def test_resample_info_attributes():
     ri = thickness_correction._ResampleInfo(
-        np.float64(1.5), np.float64(2.5), Path("file.tif")
+        np.float64(1.5),
+        np.float64(2.5),
+        Path("file.tif"),
     )
     assert ri.desired_z == np.float64(1.5)
     assert ri.original_z == np.float64(2.5)

@@ -1,3 +1,5 @@
+"""Image cropping."""
+
 from pathlib import Path
 
 import numpy as np
@@ -23,11 +25,12 @@ def _get_nonblack_region(image: np.ndarray) -> _Region:
 
     if width > 0 and height > 0:
         return (x, y, width, height)
-    else:
-        return (0, 0, 0, 0)
+    return (0, 0, 0, 0)
 
 
-def _get_num_black_rows(image, start_row, end_row, row_increment) -> int:
+def _get_num_black_rows(
+    image: np.ndarray, start_row: int, end_row: int, row_increment: int
+) -> int:
     """Count the number of consecutive fully black rows starting from start_row."""
     num_black_rows = 0
     for row in range(start_row, end_row, row_increment):
@@ -38,7 +41,9 @@ def _get_num_black_rows(image, start_row, end_row, row_increment) -> int:
     return num_black_rows
 
 
-def _get_num_black_columns(image, start_col, end_col, col_increment) -> int:
+def _get_num_black_columns(
+    image: np.ndarray, start_col: int, end_col: int, col_increment: int
+) -> int:
     """Count the number of consecutive fully black columns starting from start_col."""
     num_black_columns = 0
     for col in range(start_col, end_col, col_increment):
@@ -61,11 +66,10 @@ def _get_crop_im_ref(image: np.ndarray) -> tuple[np.ndarray, _Region]:
 
 def _get_crop(image: np.ndarray, nonblack_region: _Region) -> np.ndarray:
     """Return the cropped image excluding all fully black rows and columns."""
-    cropped_image = image[
+    return image[
         nonblack_region[1] : nonblack_region[1] + nonblack_region[3],
         nonblack_region[0] : nonblack_region[0] + nonblack_region[2],
     ]
-    return cropped_image
 
 
 def _shift_xy(image: np.ndarray) -> tuple[int, int]:

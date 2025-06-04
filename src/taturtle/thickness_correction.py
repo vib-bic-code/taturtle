@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import logging
 import re
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -12,8 +12,7 @@ import skimage.io as iio
 import tifffile
 
 from taturtle import isotonic_regression
-from taturtle.utils import get_file_list, create_filename_output_thickness
-
+from taturtle.utils import create_filename_output_thickness, get_file_list
 
 logger = logging.getLogger(__name__)
 
@@ -32,12 +31,14 @@ class _ResampleInfo:
 
 
 def _nearest_neighbor_resample(
-    input_files: list[Path], slice_thickness_nm: float
+    input_files: list[Path],
+    slice_thickness_nm: float,
 ) -> list[_ResampleInfo]:
     slices = _parse_filenames(input_files)
     if not _slice_positions_monotonically_increasing(slices):
         logger.debug(
-            "Z-position of slices is *not* monotonically increasing! Performing isotonic regression."
+            "Z-position of slices is *not* monotonically increasing! Performing "
+            "isotonic regression."
         )
         zs = np.array([s.z for s in slices], dtype=np.float64)
         isotonic = isotonic_regression.fit(zs)
@@ -54,7 +55,8 @@ def _get_resampled_files(
 
 
 def _do_nearest_neighbor_resampling(
-    slices: list[_PathPair], slice_thickness_nm: float
+    slices: list[_PathPair],
+    slice_thickness_nm: float,
 ) -> list[_ResampleInfo]:
     dz = slice_thickness_nm / 1000.0
     zfirst = slices[0].z
@@ -68,14 +70,14 @@ def _do_nearest_neighbor_resampling(
     for i in range(num_resampled_slices):
         desired_z = zfirst + i * dz
         while index_nearest_z < num_original_slices - 1 and abs(
-            slices[index_nearest_z].z - desired_z
+            slices[index_nearest_z].z - desired_z,
         ) >= abs(slices[index_nearest_z + 1].z - desired_z):
             index_nearest_z += 1
 
         nearest_original_z = slices[index_nearest_z].z
         nearest_original_path = slices[index_nearest_z].path
         resample_info.append(
-            _ResampleInfo(desired_z, nearest_original_z, nearest_original_path)
+            _ResampleInfo(desired_z, nearest_original_z, nearest_original_path),
         )
 
     return resample_info
@@ -91,7 +93,7 @@ def _parse_filenames(
         match = regex.match(str(path))
         if not match:
             raise RuntimeError(
-                f"The file {path} does not match our expected filename format string."
+                f"The file {path} does not match our expected filename format string.",
             )
         slice_z = match.group(2)
         z = np.float64(slice_z)
@@ -154,16 +156,21 @@ def _make_strictly_monotonic_interval(zs: np.ndarray, i1: int, i2: int) -> None:
         zs[i] += dz
 
 
-def run_thickness_correction(input_path: Path, slice_thickness: float) -> tuple:
-    """runs thickness correction and returns change in numbers of slices"""
+def run_thickness_correction(
+    input_path: Path, slice_thickness: float
+) -> tuple[int, int]:
+    """Run thickness correction and returns change in numbers of slices."""
     input_files = sorted(get_file_list(input_path))
     slices = _get_resampled_files(
-        _nearest_neighbor_resample(input_files, slice_thickness)
+        _nearest_neighbor_resample(input_files, slice_thickness),
     )
     for idx, slice_path in enumerate(slices):
         iio.imsave(
             create_filename_output_thickness(
-                input_path, slice_path, Path("thickness_corr"), idx
+                input_path,
+                slice_path,
+                Path("thickness_corr"),
+                idx,
             ),
             tifffile.imread(slice_path),
         )

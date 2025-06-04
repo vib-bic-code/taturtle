@@ -11,7 +11,8 @@ def test_get_num_black_rows_all_black():
 
 def test_get_num_black_rows_partial_black():
     img = np.array(
-        [[0, 0, 0], [0, 0, 0], [1, 0, 0], [0, 0, 0], [0, 0, 0]], dtype=np.uint8
+        [[0, 0, 0], [0, 0, 0], [1, 0, 0], [0, 0, 0], [0, 0, 0]],
+        dtype=np.uint8,
     )
     assert autocrop._get_num_black_rows(img, 0, 4, 1) == 2
     assert autocrop._get_num_black_rows(img, 4, 0, -1) == 2

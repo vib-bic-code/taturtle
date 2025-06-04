@@ -1,9 +1,9 @@
 from pathlib import Path
 
 from taturtle.utils import (
-    get_file_list,
     create_filename_output,
     create_filename_output_thickness,
+    get_file_list,
 )
 
 
@@ -25,7 +25,9 @@ def test_get_file_list_nonexistent_folder():
 def test_create_filename_output():
     f = Path("image1.tif")
     output_path = create_filename_output(
-        Path("tests") / Path("data") / Path("image1.tif"), f, Path("test_output")
+        Path("tests") / Path("data") / Path("image1.tif"),
+        f,
+        Path("test_output"),
     )
     expected_path = Path("tests") / Path("data") / Path("test_output") / "image1.tif"
     assert output_path == expected_path

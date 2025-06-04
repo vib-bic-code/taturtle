@@ -4,6 +4,7 @@ import numpy as np
 
 
 def fit(a: np.ndarray) -> np.ndarray:
+    """Fit isotonic regression."""
     n = len(a)
     w = np.ones(n, dtype=np.float64)
     return _fit_with_weights(a, w)
@@ -15,10 +16,10 @@ def _fit_with_weights(a: np.ndarray, w: np.ndarray) -> np.ndarray:
 
     aprime = np.zeros(n, dtype=np.float64)
     wprime = np.zeros(n, dtype=np.float64)
-    S = np.zeros(n + 1, dtype=int)
+    weights = np.zeros(n + 1, dtype=int)
 
     aprime[0], wprime[0] = a[0], w[0]
-    S[0], S[1] = 0, 1
+    weights[0], weights[1] = 0, 1
     j = 0
 
     for i in range(1, n):
@@ -33,11 +34,11 @@ def _fit_with_weights(a: np.ndarray, w: np.ndarray) -> np.ndarray:
             wprime[j - 1] += wprime[j]
             j -= 1
 
-        S[j + 1] = i + 1
+        weights[j + 1] = i + 1
 
     y = np.zeros(n, dtype=np.float64)
     for k in range(j + 1):
-        for L in range(S[k], S[k + 1]):
-            y[L] = aprime[k]
+        for weight in range(weights[k], weights[k + 1]):
+            y[weight] = aprime[k]
 
     return y
