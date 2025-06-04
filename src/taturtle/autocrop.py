@@ -1,14 +1,19 @@
+"""Image cropping."""
+
 from pathlib import Path
 
 import numpy as np
 import tifffile
 
+from taturtle.region import Region
 from taturtle.utils import get_file_list
 
-type _Region = tuple[int, int, int, int]
+_Image = np.ndarray[tuple[int, ...], np.dtype[np.unsignedinteger]]
 
 
-def _get_nonblack_region(image: np.ndarray) -> _Region:
+def _get_nonblack_region(
+    image: _Image,
+) -> Region:
     """Return the bounding box of the non-black region in the image."""
     image_height, image_width = image.shape
     top_black_margin = _get_num_black_rows(image, 0, image_height - 1, +1)
@@ -22,12 +27,16 @@ def _get_nonblack_region(image: np.ndarray) -> _Region:
     height = image_height - top_black_margin - bottom_black_margin
 
     if width > 0 and height > 0:
-        return (x, y, width, height)
-    else:
-        return (0, 0, 0, 0)
+        return Region(x, y, x + width, y + height)
+    return Region(0, 0, 0, 0)
 
 
-def _get_num_black_rows(image, start_row, end_row, row_increment) -> int:
+def _get_num_black_rows(
+    image: _Image,
+    start_row: int,
+    end_row: int,
+    row_increment: int,
+) -> int:
     """Count the number of consecutive fully black rows starting from start_row."""
     num_black_rows = 0
     for row in range(start_row, end_row, row_increment):
@@ -38,7 +47,12 @@ def _get_num_black_rows(image, start_row, end_row, row_increment) -> int:
     return num_black_rows
 
 
-def _get_num_black_columns(image, start_col, end_col, col_increment) -> int:
+def _get_num_black_columns(
+    image: _Image,
+    start_col: int,
+    end_col: int,
+    col_increment: int,
+) -> int:
     """Count the number of consecutive fully black columns starting from start_col."""
     num_black_columns = 0
     for col in range(start_col, end_col, col_increment):
@@ -49,26 +63,25 @@ def _get_num_black_columns(image, start_col, end_col, col_increment) -> int:
     return num_black_columns
 
 
-def _get_crop_im_ref(image: np.ndarray) -> tuple[np.ndarray, _Region]:
+def _get_crop_im_ref(image: _Image) -> tuple[_Image, Region]:
     """Return the cropped image excluding all fully black rows and columns."""
     nonblack_region = _get_nonblack_region(image)
     cropped_image = image[
-        nonblack_region[1] : nonblack_region[1] + nonblack_region[3],
-        nonblack_region[0] : nonblack_region[0] + nonblack_region[2],
+        nonblack_region.x1 : nonblack_region.x2,
+        nonblack_region.y1 : nonblack_region.y2,
     ]
     return cropped_image, nonblack_region
 
 
-def _get_crop(image: np.ndarray, nonblack_region: _Region) -> np.ndarray:
+def _get_crop(image: _Image, nonblack_region: Region) -> _Image:
     """Return the cropped image excluding all fully black rows and columns."""
-    cropped_image = image[
-        nonblack_region[1] : nonblack_region[1] + nonblack_region[3],
-        nonblack_region[0] : nonblack_region[0] + nonblack_region[2],
+    return image[
+        nonblack_region.x1 : nonblack_region.x2,
+        nonblack_region.y1 : nonblack_region.y2,
     ]
-    return cropped_image
 
 
-def _shift_xy(image: np.ndarray) -> tuple[int, int]:
+def _shift_xy(image: _Image) -> tuple[int, int]:
     """Return the shift in x and y (top and left black margins)."""
     image_height, image_width = image.shape
     top_black_margin = _get_num_black_rows(image, 0, image_height - 1, +1)

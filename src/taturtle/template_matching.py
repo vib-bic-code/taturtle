@@ -1,23 +1,30 @@
-from dataclasses import dataclass
+"""Template matching."""
+
 import multiprocessing as mp
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
-import skimage.io as iio
 import scipy.ndimage as ndi
+import skimage.io as iio
 import tifffile
 
+from taturtle.region import Region
 from taturtle.utils import get_file_list
+
+Patch = np.ndarray[tuple[int, ...], np.dtype[np.float64]]
 
 
 @dataclass(frozen=True)
 class TemplateMatching:
+    """Template matching parameters."""
+
     init_x: int
     init_y: int
     prev_x: int
     prev_y: int
-    patch_ref: np.ndarray[tuple[int, ...], np.dtype[np.float64]]
-    patch_prev: np.ndarray[tuple[int, ...], np.dtype[np.float64]]
+    patch_ref: Patch
+    patch_prev: Patch
     patch_list: np.ndarray[tuple[int, int, int], np.dtype[np.float64]]
     tiff_files: list[Path]
 
@@ -25,18 +32,17 @@ class TemplateMatching:
 def init_templatematching(
     input_path: Path,
     image_ref: Path,
-    x_a: list[int],
-    y_a: list[int],
+    region: Region,
 ) -> TemplateMatching:
-    """initializing parameters for template matching"""
+    """Initialize parameters for template matching."""
     tiff_files_list = get_file_list(input_path)
     im = np.array(tifffile.imread(image_ref))
-    patch_ref = im[x_a[0] : x_a[1], y_a[0] : y_a[1]].astype(np.float64)
-    init_x, init_y = x_a[0], y_a[0]
+    patch_ref = im[region.x1 : region.x2, region.y1 : region.y2].astype(np.float64)
+    init_x, init_y = region.x1, region.y1
     prev_x, prev_y = init_x, init_y
     patch_prev = patch_ref
     patch_list = np.zeros(
-        (patch_ref.shape[0], patch_ref.shape[1], len(tiff_files_list))
+        (patch_ref.shape[0], patch_ref.shape[1], len(tiff_files_list)),
     )
     return TemplateMatching(
         init_x,
@@ -51,26 +57,29 @@ def init_templatematching(
 
 
 def _calculate_mad(
-    patch: np.ndarray, patch_ref: np.ndarray, patch_prev: np.ndarray, alpha: int
+    patch: Patch,
+    patch_ref: Patch,
+    patch_prev: Patch,
+    alpha: int,
 ) -> int:
-    """calculates the mean absolute difference between two patches"""
+    """Calculate the mean absolute difference between two patches."""
     diff1 = patch - patch_ref
     diff2 = patch - patch_prev
-    return alpha * np.sum(np.abs(diff1)) + (1 - alpha) * np.sum(np.abs(diff2))
+    return alpha * int(np.sum(np.abs(diff1))) + (1 - alpha) * int(np.sum(np.abs(diff2)))
 
 
 def _process_image(
     i: int,
     input_path: Path,
     files: list[Path],
-    patch_r: np.ndarray,
-    patch_p: np.ndarray,
+    patch_r: Patch,
+    patch_p: Patch,
     alpha: int,
     search_window: int,
     prev_x: int,
     prev_y: int,
-) -> tuple[int, int, np.ndarray]:
-    """returns the new position in x/y and the new patch"""
+) -> tuple[int, int, Patch]:
+    """Return the new position in x/y and the new patch."""
     im = tifffile.imread(input_path / files[i])
     mad_max = 255 * (patch_r.size)
     min_x, min_y = max(prev_x - search_window, 0), max(prev_y - search_window, 0)
@@ -78,7 +87,7 @@ def _process_image(
     for x in range(min_x, min_x + 2 * search_window + 2):
         for y in range(min_y, min_y + 2 * search_window + 2):
             patch = im[x : (x + patch_r.shape[0]), y : (y + patch_r.shape[1])].astype(
-                np.float64
+                np.float64,
             )
             mad = _calculate_mad(patch, patch_r, patch_p, alpha)
             if mad < mad_max:
@@ -97,7 +106,7 @@ def save_shift_image(
     posx: int,
     posy: int,
 ) -> tuple[int, int]:
-    """shift, save the aligned images and returns the shift in x/y"""
+    """Shift, save the aligned images and returns the shift in x/y."""
     shift = (x_0 - posx, y_0 - posy)
     im = ndi.shift(tifffile.imread(input_path / tiff_file), shift)
     iio.imsave(input_path.parent / outdir / f"{tiff_file.stem}.tif", im)
@@ -111,10 +120,10 @@ def run_template_matching(
     alpha: int,
     search_window: int,
     cpu: int,
-) -> list[tuple[int, int, np.ndarray]]:
-    """runs the template matching"""
+) -> list[tuple[int, int, Patch]]:
+    """Run template matching."""
     with mp.Pool(processes=cpu) as pool:
-        results = pool.starmap(
+        return pool.starmap(
             _process_image,
             [
                 (
@@ -131,13 +140,14 @@ def run_template_matching(
                 for i in range(len(template.tiff_files))
             ],
         )
-    return results
 
 
 def unpack_result_template_step1(
-    results: tuple, patch_ref: np.ndarray, number_of_files: int
-) -> tuple:
-    """unpack results of the first step of the template matching"""
+    results: list[tuple[int, int, Patch]],
+    patch_ref: Patch,
+    number_of_files: int,
+) -> tuple[Patch, int, int, np.ndarray[tuple[int, int, int], np.dtype[np.float64]]]:
+    """Unpack results of the first step of the template matching."""
     patch_list = np.zeros((patch_ref.shape[0], patch_ref.shape[1], number_of_files))
     for i, (pos_x, pos_y, patch_temp) in enumerate(results):
         patch_prev = patch_temp
@@ -146,7 +156,11 @@ def unpack_result_template_step1(
     return patch_prev, prev_x, prev_y, patch_list
 
 
-def template_median(template: TemplateMatching, patch_list) -> TemplateMatching:
+def template_median(
+    template: TemplateMatching,
+    patch_list: np.ndarray[tuple[int, int, int], np.dtype[np.float64]],
+) -> TemplateMatching:
+    """Compute median patch list."""
     return TemplateMatching(
         init_x=template.init_x,
         init_y=template.init_y,

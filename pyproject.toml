@@ -25,7 +25,6 @@ taturtle = "taturtle.__main__:main"
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
-
 [tool.pdm]
 distribution = true
 version = { source = "file", path = "src/taturtle/__version__.py" }
@@ -33,9 +32,18 @@ version = { source = "file", path = "src/taturtle/__version__.py" }
 [tool.ruff.format]
 line-ending = "lf"
 
+# See: https://docs.astral.sh/ruff/rules
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["COM812", "D203", "D212", "EM", "S101", "G004", "TRY003", "PLR0913"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN", "D", "SLF", "PLR2004"]
+
 [dependency-groups]
-test = [
-    "pytest>=8.3.5",
-    "ruff>=0.11.11",
-    "mypy>=1.15.0",
+dev = [
+    "scipy-stubs>=1.15.3.0",
+    "pytest>=8.4.0",
+    "ruff>=0.11.12",
+    "mypy>=1.16.0",
 ]
