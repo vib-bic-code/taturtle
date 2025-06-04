@@ -88,10 +88,6 @@ def _shift_xy(image: _Image) -> tuple[int, int]:
     left_black_margin = _get_num_black_columns(image, 0, image_width - 1, +1)
     return top_black_margin, left_black_margin
 
-def reference_shift(image: np.ndarray[tuple[int, ...], np.dtype[np.float64]]) -> tuple[int, int]:
-    """Find where the black r"""
-    cropped_image, nonblack_region = _get_crop_im_ref(image)
-    return _shift_xy(image)
 
 def run_autocrop(input_path: Path, im_ref: Path, outdir: Path) -> tuple[int, int]:
     """Run the autocropper on all images in the input folder."""

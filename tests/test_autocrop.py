@@ -44,10 +44,7 @@ def test_get_num_black_columns_none_black() -> None:
 
 def test_crop_image() -> None:
     img = tifffile.imread("tests/data/black-offset-1.tif")
-    print(img.shape)
     expected = tifffile.imread("tests/data/black-offset-1.tif")
     (cropped, region) = autocrop._get_crop_im_ref(img)
-    print(cropped.shape)
-    print(region)
     assert cropped == expected
     assert region == Region(x1=0, y1=16, x2=20, y2=16)
