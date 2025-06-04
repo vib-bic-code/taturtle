@@ -1,6 +1,8 @@
 import numpy as np
+import tifffile
 
 from taturtle import autocrop
+from taturtle.region import Region
 
 
 def test_get_num_black_rows_all_black() -> None:
@@ -38,3 +40,14 @@ def test_get_num_black_columns_partial_black() -> None:
 def test_get_num_black_columns_none_black() -> None:
     img = np.ones((2, 2), dtype=np.uint8)
     assert autocrop._get_num_black_columns(img, 0, 1, 1) == 0
+
+
+def test_crop_image() -> None:
+    img = tifffile.imread("tests/data/black-offset-1.tif")
+    print(img.shape)
+    expected = tifffile.imread("tests/data/black-offset-1.tif")
+    (cropped, region) = autocrop._get_crop_im_ref(img)
+    print(cropped.shape)
+    print(region)
+    assert cropped == expected
+    assert region == Region(x1=0, y1=16, x2=20, y2=16)

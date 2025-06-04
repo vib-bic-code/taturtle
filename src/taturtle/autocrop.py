@@ -15,7 +15,7 @@ def _get_nonblack_region(
     image: _Image,
 ) -> Region:
     """Return the bounding box of the non-black region in the image."""
-    image_height, image_width = image.shape
+    image_height, image_width, *_ = image.shape
     top_black_margin = _get_num_black_rows(image, 0, image_height - 1, +1)
     bottom_black_margin = _get_num_black_rows(image, image_height - 1, 0, -1)
 
@@ -27,7 +27,7 @@ def _get_nonblack_region(
     height = image_height - top_black_margin - bottom_black_margin
 
     if width > 0 and height > 0:
-        return Region(x, y, x + width, y + height)
+        return Region(x1=x, y1=y, x2=x + width, y2=y + height)
     return Region(0, 0, 0, 0)
 
 
@@ -67,8 +67,8 @@ def _get_crop_im_ref(image: _Image) -> tuple[_Image, Region]:
     """Return the cropped image excluding all fully black rows and columns."""
     nonblack_region = _get_nonblack_region(image)
     cropped_image = image[
-        nonblack_region.x1 : nonblack_region.x2,
         nonblack_region.y1 : nonblack_region.y2,
+        nonblack_region.x1 : nonblack_region.x2,
     ]
     return cropped_image, nonblack_region
 
@@ -76,8 +76,8 @@ def _get_crop_im_ref(image: _Image) -> tuple[_Image, Region]:
 def _get_crop(image: _Image, nonblack_region: Region) -> _Image:
     """Return the cropped image excluding all fully black rows and columns."""
     return image[
-        nonblack_region.x1 : nonblack_region.x2,
         nonblack_region.y1 : nonblack_region.y2,
+        nonblack_region.x1 : nonblack_region.x2,
     ]
 
 
@@ -88,6 +88,10 @@ def _shift_xy(image: _Image) -> tuple[int, int]:
     left_black_margin = _get_num_black_columns(image, 0, image_width - 1, +1)
     return top_black_margin, left_black_margin
 
+def reference_shift(image: np.ndarray[tuple[int, ...], np.dtype[np.float64]]) -> tuple[int, int]:
+    """Find where the black r"""
+    cropped_image, nonblack_region = _get_crop_im_ref(image)
+    return _shift_xy(image)
 
 def run_autocrop(input_path: Path, im_ref: Path, outdir: Path) -> tuple[int, int]:
     """Run the autocropper on all images in the input folder."""
