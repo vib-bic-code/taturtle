@@ -35,7 +35,7 @@ jobs:
         run: "pdm run ruff check"
 
       - name: "Type checking"
-        run: "pdm run mypy ."
+        run: "pdm run mypy --strict ."
 
       - name: "Tests"
         run: "pdm run pytest"

@@ -5,6 +5,7 @@ import time
 from pathlib import Path
 
 from taturtle import autocrop
+from taturtle.region import Region
 from taturtle.template_matching import (
     init_templatematching,
     run_template_matching,
@@ -23,8 +24,7 @@ def main() -> None:
     args = arguments_parser()
     input_path = args.img_ref.parent
     image_ref = args.img_ref
-    x_a = args.x_a
-    y_a = args.y_a
+    region = args.region
     # Output Paths
     (input_path.parent / "output").mkdir(parents=True, exist_ok=True)
     (input_path.parent / "thickness_corr").mkdir(parents=True, exist_ok=True)
@@ -41,13 +41,17 @@ def main() -> None:
             args.img_ref,
             Path("cropped"),
         )
-        x_a = [x - x_shift for x in args.x_a]
-        y_a = [y - y_shift for y in args.y_a]
+        region = Region(
+            x1=region.x1 - x_shift,
+            x2=region.x2 - x_shift,
+            y1=region.y1 - y_shift,
+            y2=region.y2 - y_shift,
+        )
         input_path = Path(input_path).parent / "cropped"
         image_ref = input_path.parent / "cropped" / args.img_ref.name
 
     if not args.thick_corr:
-        template = init_templatematching(input_path, image_ref, x_a, y_a)
+        template = init_templatematching(input_path, image_ref, region)
         patch_prev, prev_x, prev_y, patch_list = unpack_result_template_step1(
             run_template_matching(
                 input_path,
@@ -93,10 +97,7 @@ def main() -> None:
             f"Before {len_input_files}, After {len_slices} Thickness correction passed"
         )
         template = init_templatematching(
-            input_path.parent / Path("thickness_corr"),
-            image_ref,
-            x_a,
-            y_a,
+            input_path.parent / Path("thickness_corr"), image_ref, region
         )
         patch_prev, prev_x, prev_y, patch_list = unpack_result_template_step1(
             run_template_matching(

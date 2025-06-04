@@ -3,14 +3,19 @@
 import numpy as np
 
 
-def fit(a: np.ndarray) -> np.ndarray:
+def fit(
+    a: np.ndarray[tuple[int, ...], np.dtype[np.float64]],
+) -> np.ndarray[tuple[int], np.dtype[np.float64]]:
     """Fit isotonic regression."""
     n = len(a)
     w = np.ones(n, dtype=np.float64)
     return _fit_with_weights(a, w)
 
 
-def _fit_with_weights(a: np.ndarray, w: np.ndarray) -> np.ndarray:
+def _fit_with_weights(
+    a: np.ndarray[tuple[int, ...], np.dtype[np.float64]],
+    w: np.ndarray[tuple[int], np.dtype[np.float64]],
+) -> np.ndarray[tuple[int], np.dtype[np.float64]]:
     n = len(a)
     assert len(w) == n
 

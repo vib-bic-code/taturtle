@@ -113,7 +113,7 @@ def _slice_positions_monotonically_increasing(
     return True
 
 
-def _make_strictly_monotonic(zs: np.ndarray) -> None:
+def _make_strictly_monotonic(zs: np.ndarray[tuple[int], np.dtype[np.float64]]) -> None:
     if len(zs) == 0:
         return
 
@@ -134,7 +134,9 @@ def _make_strictly_monotonic(zs: np.ndarray) -> None:
             interval_z = zs[i]
 
 
-def _make_strictly_monotonic_interval(zs: np.ndarray, i1: int, i2: int) -> None:
+def _make_strictly_monotonic_interval(
+    zs: np.ndarray[tuple[int], np.dtype[np.float64]], i1: int, i2: int
+) -> None:
     assert i2 < len(zs)
     assert i1 < i2
 
