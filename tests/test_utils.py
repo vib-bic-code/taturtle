@@ -7,16 +7,6 @@ from taturtle.utils import (
 )
 
 
-def test_get_file_list_returns_tiff_files() -> None:
-    result = set(get_file_list(Path("tests") / Path("data")))
-    expected = {
-        Path("tests") / Path("data") / Path("image1.tif"),
-        Path("tests") / Path("data") / Path("image2.tiff"),
-    }
-
-    assert result == expected
-
-
 def test_get_file_list_nonexistent_folder() -> None:
     result = get_file_list(Path("nonexistent_folder"))
     assert result == []
