@@ -46,8 +46,8 @@ tests\test_utils.py ....                                                        
 ```
 
 ### Usage and tutorial
-- example data1: "C:\GBW_MyDownloads\data_HR\debug100\slice_00100_z=0.6358um.tif"
-- test data and the roi are in "/GBW-0004_CMEVIB_OMERO/0001_LIMONE/Tatiana/test_clem/debug50"
+- example data1: `C:\GBW_MyDownloads\data_HR\debug100\slice_00100_z=0.6358um.tif`
+- test data and the roi are in `/GBW-0004_CMEVIB_OMERO/0001_LIMONE/Tatiana/test_clem/debug50` or `L:\GBW-0004_CMEVIB_OMERO\0001_LIMONE\Tatiana\test_clem\debug_50_d2`
 - general usage (in an active conda or venv environment):
  ```bash
 usage: taturtle [-h] [--region x1 x2 y1 y2] [--x x1 x2] [--y y1 y2] [--search-window SEARCH_WINDOW] [--alpha ALPHA] [--crop | --no-crop] [--thick-corr | --no-thick-corr]
