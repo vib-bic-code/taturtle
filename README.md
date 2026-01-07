@@ -2,7 +2,7 @@
 
 - WPI: preparation for the pip plugin
 - https://packaging.python.org/en/latest/
-
+- python version of [EM_reg](https://github.com/vibbits/EMRegistration)
 
 ## README
 
