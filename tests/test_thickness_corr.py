@@ -1,12 +1,12 @@
+import numpy as np
 from pathlib import Path
 
-import numpy as np
 import pytest
 
 from taturtle import thickness_correction
 
 
-def test_parse_filenames_valid() -> None:
+def test_parse_filenames_valid():
     files = [
         Path("img_001_z=10um.tif"),
         Path("img_002_z=-5.5um.tif"),
@@ -22,7 +22,7 @@ def test_parse_filenames_valid() -> None:
     assert pairs[2].path == files[2]
 
 
-def test_parse_filenames_invalid_format() -> None:
+def test_parse_filenames_invalid_format():
     files = [
         Path("img_001_z=10um.tif"),
         Path("badfile.tif"),
@@ -31,7 +31,7 @@ def test_parse_filenames_invalid_format() -> None:
         thickness_correction._parse_filenames(files)
 
 
-def test_parse_filenames_float_and_int() -> None:
+def test_parse_filenames_float_and_int():
     files = [
         Path("img_001_z=1.23um.tif"),
         Path("img_002_z=4um.tif"),
@@ -41,11 +41,9 @@ def test_parse_filenames_float_and_int() -> None:
     assert pairs[1].z == np.float64(4)
 
 
-def test_resample_info_attributes() -> None:
+def test_resample_info_attributes():
     ri = thickness_correction._ResampleInfo(
-        np.float64(1.5),
-        np.float64(2.5),
-        Path("file.tif"),
+        np.float64(1.5), np.float64(2.5), Path("file.tif")
     )
     assert ri.desired_z == np.float64(1.5)
     assert ri.original_z == np.float64(2.5)

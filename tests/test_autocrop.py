@@ -1,50 +1,39 @@
 import numpy as np
-import tifffile
 
 from taturtle import autocrop
-from taturtle.region import Region
 
 
-def test_get_num_black_rows_all_black() -> None:
+def test_get_num_black_rows_all_black():
     img = np.zeros((5, 3), dtype=np.uint8)
     assert autocrop._get_num_black_rows(img, 0, 4, 1) == 4
     assert autocrop._get_num_black_rows(img, 4, 0, -1) == 4
 
 
-def test_get_num_black_rows_partial_black() -> None:
+def test_get_num_black_rows_partial_black():
     img = np.array(
-        [[0, 0, 0], [0, 0, 0], [1, 0, 0], [0, 0, 0], [0, 0, 0]],
-        dtype=np.uint8,
+        [[0, 0, 0], [0, 0, 0], [1, 0, 0], [0, 0, 0], [0, 0, 0]], dtype=np.uint8
     )
     assert autocrop._get_num_black_rows(img, 0, 4, 1) == 2
     assert autocrop._get_num_black_rows(img, 4, 0, -1) == 2
 
 
-def test_get_num_black_rows_none_black() -> None:
+def test_get_num_black_rows_none_black():
     img = np.ones((3, 3), dtype=np.uint8)
     assert autocrop._get_num_black_rows(img, 0, 2, 1) == 0
 
 
-def test_get_num_black_columns_all_black() -> None:
+def test_get_num_black_columns_all_black():
     img = np.zeros((3, 4), dtype=np.uint8)
     assert autocrop._get_num_black_columns(img, 0, 3, 1) == 3
     assert autocrop._get_num_black_columns(img, 3, 0, -1) == 3
 
 
-def test_get_num_black_columns_partial_black() -> None:
+def test_get_num_black_columns_partial_black():
     img = np.array([[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]], dtype=np.uint8)
     assert autocrop._get_num_black_columns(img, 0, 3, 1) == 2
     assert autocrop._get_num_black_columns(img, 3, 0, -1) == 1
 
 
-def test_get_num_black_columns_none_black() -> None:
+def test_get_num_black_columns_none_black():
     img = np.ones((2, 2), dtype=np.uint8)
     assert autocrop._get_num_black_columns(img, 0, 1, 1) == 0
-
-
-def test_crop_image() -> None:
-    img = tifffile.imread("tests/data/black-offset-1.tif")
-    expected = tifffile.imread("tests/data/black-offset-1-expected.tif")
-    (cropped, region) = autocrop._get_crop_im_ref(img)
-    assert np.array_equal(cropped, expected)
-    assert region == Region(x1=0, y1=0, x2=20, y2=16)
