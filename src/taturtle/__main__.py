@@ -30,7 +30,7 @@ def main():
         print("autocrop skipped")
     else:
         x_shift, y_shift = autocrop.run_autocrop(
-            input_path, args.image_ref, Path("cropped")
+            input_path, args.img_ref, Path("cropped")
         )
         x_a = [x - x_shift for x in args.x_a]
         y_a = [y - y_shift for y in args.y_a]
