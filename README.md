@@ -50,7 +50,7 @@ tests\test_utils.py ....                                                        
 - test data and the roi are in `/GBW-0004_CMEVIB_OMERO/0001_LIMONE/Tatiana/test_clem/debug50` or `L:\GBW-0004_CMEVIB_OMERO\0001_LIMONE\Tatiana\test_clem\debug_50_d2`
 - general usage (in an active conda or venv environment):
  ```bash
-usage: taturtle [-h] [--region x1 x2 y1 y2] [--x x1 x2] [--y y1 y2] [--search_-_window SEARCH_WINDOW] [--alpha ALPHA] [--crop | --no_-_crop] [--thick_corr]
+usage: taturtle [-h] [--region x1 x2 y1 y2] [--x x1 x2] [--y y1 y2] [--search_window SEARCH_WINDOW] [--alpha ALPHA] [--crop | --no_crop] [--thick_corr]
                 [--slice_thickness_nm SLICE_THICKNESS_NM] [--cpu CPU] [--img-ref IMG_REF]
  ```
 - to run a template matching with autocrop and thickness correction (example 1)
@@ -60,7 +60,7 @@ taturtle   --x 6 182 --y 2073 2278 --search_window  100 --alpha 1.0  --crop --th
 
 - example2:
 ```bash
-taturtle --region 6 71 1140 1392 --search_window  100 --alpha 1.0  --crop --thick_corr --slice_thickness_nm 5.0  --img-ref "pathway\slice_00100_z=0.6358um.tif" --cpu 8
+taturtle --region 6 71 1140 1392 --search_window  100 --alpha 1.0  --crop --thick_corr --slice_thickness_nm 5.0  --img_ref "pathway\slice_00100_z=0.6358um.tif" --cpu 8
 ```
   
 ### Contact
