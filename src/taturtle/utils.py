@@ -35,7 +35,7 @@ def arguments_parser():
     )
     parser.add_argument("--x_a", nargs=2, type=int, help="x_a values")
     parser.add_argument("--y_a", nargs=2, type=int, help="y_a values")
-    parser.add_argument("--search-window", type=int, help="search window")
+    parser.add_argument("--search_window", type=int, help="search window")
     parser.add_argument("--alpha", type=float, default=1.0, help="alpha value")
     parser.add_argument(
         "--crop",
@@ -43,15 +43,15 @@ def arguments_parser():
         help="set to True to crop images",
     )
     parser.add_argument(
-        "--thick-corr",
+        "--thick_corr",
         action=argparse.BooleanOptionalAction,
         help="Do thickness correction",
     )
     parser.add_argument(
-        "--slice-thickness-nm", type=float, help="slice thickness in nm"
+        "--slice_thickness_nm", type=float, help="slice thickness in nm"
     )
     parser.add_argument("--cpu", type=int, help="number of cpus to use")
     parser.add_argument(
-        "--img-ref", type=Path, help="reference image associated to the ROI"
+        "--img_ref", type=Path, help="reference image associated to the ROI"
     )
     return parser.parse_args()
