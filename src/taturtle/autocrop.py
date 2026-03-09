@@ -81,11 +81,11 @@ def run_autocrop(input_path: Path, im_ref: Path, outdir: Path) -> tuple[int, int
     image = tifffile.imread(im_ref)
     cropped_image, nonblack_region = _get_crop_im_ref(image)
     x_shift, y_shift = _shift_xy(image)
-    tifffile.imwrite(input_path.parent / outdir / f"{im_ref.stem}.tif", cropped_image)
+    tifffile.imwrite(outdir / f"{im_ref.stem}.tif", cropped_image)
     file_list = [path for path in get_file_list(input_path) if path != im_ref]
     for f in file_list:
         image = tifffile.imread(f)
         cropped_image = _get_crop(image, nonblack_region)
-        tifffile.imwrite(input_path.parent / outdir / f"{f.stem}.tif", cropped_image)
+        tifffile.imwrite(outdir / f"{f.stem}.tif", cropped_image)
 
     return x_shift, y_shift

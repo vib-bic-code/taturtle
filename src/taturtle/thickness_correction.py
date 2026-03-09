@@ -154,7 +154,9 @@ def _make_strictly_monotonic_interval(zs: np.ndarray, i1: int, i2: int) -> None:
         zs[i] += dz
 
 
-def run_thickness_correction(input_path: Path, slice_thickness: float) -> tuple:
+def run_thickness_correction(
+    input_path: Path, slice_thickness: float, outdir: Path
+) -> tuple:
     """runs thickness correction and returns change in numbers of slices"""
     input_files = sorted(get_file_list(input_path))
     slices = _get_resampled_files(
@@ -162,9 +164,7 @@ def run_thickness_correction(input_path: Path, slice_thickness: float) -> tuple:
     )
     for idx, slice_path in enumerate(slices):
         iio.imsave(
-            create_filename_output_thickness(
-                input_path, slice_path, Path("thickness_corr"), idx
-            ),
+            create_filename_output_thickness(slice_path, outdir, idx),
             tifffile.imread(slice_path),
         )
     return len(input_files), len(slices)

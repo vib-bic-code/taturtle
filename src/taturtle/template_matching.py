@@ -25,14 +25,20 @@ class TemplateMatching:
 def init_templatematching(
     input_path: Path,
     image_ref: Path,
-    x_a: list[int],
-    y_a: list[int],
+    row_range: list[int],
+    col_range: list[int],
 ) -> TemplateMatching:
     """initializing parameters for template matching"""
     tiff_files_list = get_file_list(input_path)
     im = np.array(tifffile.imread(image_ref))
-    patch_ref = im[x_a[0] : x_a[1], y_a[0] : y_a[1]].astype(np.float64)
-    init_x, init_y = x_a[0], y_a[0]
+    patch_ref = im[
+        row_range[0] : row_range[1], col_range[0] : col_range[1]
+    ].astype(np.float64)
+    if np.max(patch_ref) == 0:
+        print(
+            f"WARNING: The selected ROI [rows {row_range[0]}:{row_range[1]}, cols {col_range[0]}:{col_range[1]}] is empty (all black) in the reference image!"
+        )
+    init_x, init_y = row_range[0], col_range[0]
     prev_x, prev_y = init_x, init_y
     patch_prev = patch_ref
     patch_list = np.zeros(
@@ -71,7 +77,10 @@ def _process_image(
     prev_y: int,
 ) -> tuple[int, int, np.ndarray]:
     """returns the new position in x/y and the new patch"""
-    im = tifffile.imread(input_path / files[i])
+    file_path = files[i]
+    if not file_path.is_absolute():
+        file_path = input_path / file_path
+    im = tifffile.imread(file_path)
     mad_max = 255 * (patch_r.size)
     min_x, min_y = max(prev_x - search_window, 0), max(prev_y - search_window, 0)
     pos_x, pos_y = min_x, min_y
@@ -99,8 +108,11 @@ def save_shift_image(
 ) -> tuple[int, int]:
     """shift, save the aligned images and returns the shift in x/y"""
     shift = (x_0 - posx, y_0 - posy)
-    im = ndi.shift(tifffile.imread(input_path / tiff_file), shift)
-    iio.imsave(input_path.parent / outdir / f"{tiff_file.stem}.tif", im)
+    if not tiff_file.is_absolute():
+        tiff_file = input_path / tiff_file
+    image = tifffile.imread(tiff_file)
+    im = ndi.shift(image, shift)
+    iio.imsave(outdir / f"{tiff_file.stem}.tif", im)
 
     return shift
 
